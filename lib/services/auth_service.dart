@@ -1,5 +1,3 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:developer' as dev;
@@ -10,13 +8,7 @@ import 'package:fireguard/firebase_options.dart';
 import 'package:fireguard/services/user_service.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // Guard flag to avoid overlapping interactive sign-in flows.
   static bool _interactiveInProgress = false;
-
-
-  // You can call this from your app startup (e.g. before runApp) or lazily
-  // before first authenticate. Safe to call multiple times if guarded by
-  // the internal _initialized flag.
   static bool _initialized = false;
   static Future<void> ensureInitialized({
     String? clientId,
@@ -32,8 +24,6 @@ class AuthService {
         options: DefaultFirebaseOptions.currentPlatform,
       );
     }
-
-    
     clientId ??= _inferPlatformClientId();
 
     dev.log('[AuthService] Initializing GoogleSignIn (clientId=$clientId, hostedDomain=$hostedDomain)');
@@ -49,7 +39,6 @@ class AuthService {
         dev.log('[AuthService] authenticationEvents -> ${event.runtimeType}');
       }, onError: (err, st) {
         dev.log('[AuthService] authenticationEvents error: $err');
-        // Heuristic: repeated canceled errors immediately after selection usually indicate config mismatch (clientId / SHA / google-services.json)
         if (err is GoogleSignInException && err.code == GoogleSignInExceptionCode.canceled) {
           dev.log('[AuthService] Hint: If you did not manually cancel, re-check Firebase console SHA-1/SHA-256, google-services.json freshness, and ensure only one authenticate() call.');
         }
@@ -65,7 +54,6 @@ class AuthService {
   static String? _inferPlatformClientId() {
     try {
       if (kIsWeb) {
-        // Web often uses configuration-based discovery; returning null lets SDK decide.
         return null;
       }
       switch (defaultTargetPlatform) {
@@ -83,11 +71,7 @@ class AuthService {
       return null;
     }
   }
-
-
   User? get currentUser => _auth.currentUser;
-
-
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   // Sign in with Google
@@ -97,14 +81,12 @@ class AuthService {
     String? nonce,
     String? hostedDomain,
   }) async {
-    // Prevent overlapping interactive flows which can yield spurious "canceled" errors.
     if (_interactiveInProgress) {
       dev.log('[AuthService] signInWithGoogle ignored: interactive authentication already in progress');
       return null;
     }
     _interactiveInProgress = true;
     try {
-      // Ensure GoogleSignIn is initialized (new API requires explicit initialize call)
       await ensureInitialized(
         clientId: clientId,
         serverClientId: serverClientId,
@@ -125,7 +107,7 @@ class AuthService {
       dev.log('[AuthService] Google account selected: ${account.email}');
 
   final googleAuth = await account.authentication;
-  final idToken = googleAuth.idToken; // (accessToken not exposed in this API variant)
+  final idToken = googleAuth.idToken; 
       if (idToken == null) {
         dev.log('[AuthService] idToken null after authenticate(); attempting lightweight fallback');
         final Future<GoogleSignInAccount?>? maybe = GoogleSignIn.instance.attemptLightweightAuthentication();
@@ -142,7 +124,6 @@ class AuthService {
   final credential = GoogleAuthProvider.credential(idToken: fallbackToken);
         final credResult = await _auth.signInWithCredential(credential);
         dev.log('[AuthService] Firebase sign-in success via fallback user=${credResult.user?.uid}');
-        // Ensure user document is upserted on successful sign-in
         try {
           await UserService.syncSignedInUser();
         } catch (e) {
@@ -154,7 +135,6 @@ class AuthService {
       final credential = GoogleAuthProvider.credential(idToken: idToken);
       final credResult = await _auth.signInWithCredential(credential);
       dev.log('[AuthService] Firebase sign-in success user=${credResult.user?.uid} email=${credResult.user?.email}');
-      // Ensure user document is upserted on successful sign-in
       try {
         await UserService.syncSignedInUser();
       } catch (e) {
@@ -163,10 +143,9 @@ class AuthService {
       return credResult;
       
     } on GoogleSignInException catch (e) {
-      // Treat user cancellation distinctly by returning null instead of throwing.
       if (e.code == GoogleSignInExceptionCode.canceled) {
         dev.log('[AuthService] Sign-in reported canceled. If this occurred immediately after selecting an account, re-verify configuration.');
-        return null; // propagate null to UI so it can ignore silently
+        return null; 
       }
       dev.log('[AuthService] GoogleSignInException: code=${e.code} desc=${e.description}');
       rethrow;
@@ -179,18 +158,15 @@ class AuthService {
   }
 
   /// Attempt a lightweight (silent) authentication to restore a session.
-  /// Returns true if a user became available, false otherwise.
   Future<bool> trySilentSignIn() async {
     await ensureInitialized();
     final Future<GoogleSignInAccount?>? attempt =
         GoogleSignIn.instance.attemptLightweightAuthentication();
     if (attempt == null) {
-      // Platform will emit events instead; assume not signed in yet.
       return false;
     }
     final account = await attempt;
     if (account == null) return false;
-    // If you need Firebase user restoration you can exchange the idToken again.
     final idToken = account.authentication.idToken;
     if (idToken == null) return false;
     final credential = GoogleAuthProvider.credential(idToken: idToken);

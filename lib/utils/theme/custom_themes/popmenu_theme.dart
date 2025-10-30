@@ -21,6 +21,5 @@ class TPopupMenuTheme {
   );
 
   static final darkPopupMenuTheme = PopupMenuThemeData(
-    // Add dark theme properties if needed
   );
 }

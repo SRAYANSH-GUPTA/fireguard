@@ -5,7 +5,7 @@ class TAppBarTheme {
 
   static AppBarTheme lightAppBarTheme = AppBarTheme(
     backgroundColor: Colors.white, 
-    shadowColor: Color(0x29999999), // 29% opacity to match box-shadow
+    shadowColor: Color(0x29999999), 
     elevation: 0,
     scrolledUnderElevation: 0,
     

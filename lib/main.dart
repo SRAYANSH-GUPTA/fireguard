@@ -36,7 +36,6 @@ Future<void> _requestPermissions(BuildContext context) async {
   }
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Request permissions after the first frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _requestPermissions(context);
     });
@@ -85,7 +84,6 @@ class AuthWrapper extends ConsumerWidget {
     return userAsync.when(
       data: (user) {
         if (user != null) {
-          // Kick off background sync of user record (email, location, token)
           UserService.syncSignedInUser();
           
           // Also save to user_presence for notifications
@@ -129,7 +127,6 @@ class AuthWrapper extends ConsumerWidget {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  // Restart the app or handle error
                   ref.invalidate(currentUserProvider);
                 },
                 style: ElevatedButton.styleFrom(
@@ -156,7 +153,6 @@ class AuthWrapper extends ConsumerWidget {
         );
       }
     } catch (e) {
-      // Silently fail - this is not critical for app functionality
       print('Failed to save user presence: $e');
     }
   }

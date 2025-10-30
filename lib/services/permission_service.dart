@@ -13,7 +13,6 @@ class PermissionService {
 
   static Future<void> _requestLocationPermission(BuildContext context) async {
     try {
-      // Check if location services are enabled
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         await _showLocationServiceDialog(context);
@@ -24,7 +23,6 @@ class PermissionService {
       LocationPermission permission = await Geolocator.checkPermission();
       
       if (permission == LocationPermission.denied) {
-        // Show explanation dialog before requesting permission
         bool shouldRequest = await _showLocationPermissionDialog(context);
         if (shouldRequest) {
           permission = await Geolocator.requestPermission();
@@ -54,7 +52,6 @@ class PermissionService {
       final NotificationSettings settings = await messaging.getNotificationSettings();
       
       if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
-        // Show explanation dialog before requesting permission
         bool shouldRequest = await _showNotificationPermissionDialog(context);
         if (shouldRequest) {
           final NotificationSettings newSettings = await messaging.requestPermission(

@@ -13,8 +13,8 @@ class ReportService {
   }) async {
     log('Creating report at ($latitude, $longitude) by $reportedByEmail');
     await _db.collection('reports').add({
-      'latitude': latitude,  // Changed from 'lat' to match Firebase function
-      'longitude': longitude,  // Changed from 'lng' to match Firebase function
+      'latitude': latitude,  
+      'longitude': longitude,  
       'reportedByEmail': reportedByEmail,
       'description': description ?? 'Fire reported by community member',
       'radiusMeters': radiusMeters,
@@ -22,5 +22,3 @@ class ReportService {
     });
   }
 }
-
-

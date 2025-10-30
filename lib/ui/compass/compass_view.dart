@@ -15,7 +15,7 @@ class CompassState {
   final WeatherData? weatherData;
   final bool isLoadingWeather;
   final String? errorMessage;
-  final double? smokeFreeDirection; // Direction to move for cleaner air
+  final double? smokeFreeDirection; 
   final Position? currentPosition;
 
   const CompassState({
@@ -151,7 +151,6 @@ class CompassViewModel extends StateNotifier<CompassState> {
   }
 
   void _startWeatherUpdates() {
-    // Update weather data every 5 minutes
     _weatherUpdateTimer = Timer.periodic(const Duration(minutes: 5), (timer) {
       if (state.currentPosition != null) {
         _fetchWeatherData(state.currentPosition!);
@@ -333,7 +332,7 @@ class CompassView extends ConsumerWidget {
 }
 
 class _CompassGauge extends StatelessWidget {
-  final double heading; // 0..360
+  final double heading; 
   final String riskLabel;
   final double? smokeFreeDirection;
   final WeatherData? weatherData;
@@ -354,7 +353,6 @@ class _CompassGauge extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Shadowed circle backdrop
           Container(
             width: size,
             height: size,
@@ -372,7 +370,6 @@ class _CompassGauge extends StatelessWidget {
               weatherData: weatherData,
             ),
           ),
-          // Center reading
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -405,7 +402,6 @@ class _CompassGauge extends StatelessWidget {
               ],
             ],
           ),
-          // Cardinal letters
           Positioned(top: 18, child: const _Cardinal('N')),
           Positioned(bottom: 18, child: const _Cardinal('S')),
           Positioned(left: 18, child: const _Cardinal('W')),
@@ -422,24 +418,6 @@ class _CompassGauge extends StatelessWidget {
           
           // Air quality directional labels
           if (weatherData != null) ...[
-            // Good air quality label
-            // Positioned(
-            //   child: _AirQualityLabel(
-            //     direction: (weatherData!.windDirection + 180) % 360,
-            //     label: 'Good Air',
-            //     color: AppPalette.green,
-            //     size: size,
-            //   ),
-            // ),
-            // // Bad air quality label
-            // Positioned(
-            //   child: _AirQualityLabel(
-            //     direction: weatherData!.windDirection,
-            //     label: 'Bad Air',
-            //     color: AppPalette.red,
-            //     size: size,
-            //   ),
-            // ),
           ],
         ],
       ),
@@ -493,7 +471,6 @@ class _GaugePainter extends CustomPainter {
     if (weatherData != null) {
       _drawDynamicAirQualityArcs(canvas, center, radius, ringPaint);
     } else {
-      // Default static arcs
       ringPaint.color = AppPalette.orange;
       canvas.drawArc(Rect.fromCircle(center: center, radius: radius),
           degToRad(140), degToRad(80), false, ringPaint);
@@ -562,19 +539,16 @@ class _GaugePainter extends CustomPainter {
     Color goodColor, badColor;
     
     if (airQualityIndex <= 2) {
-      // Good air quality - larger green arc
-      goodArcSize = 120; // degrees
+      goodArcSize = 120; 
       badArcSize = 60;
       goodColor = AppPalette.green;
       badColor = AppPalette.orange;
     } else if (airQualityIndex <= 3) {
-      // Moderate air quality - balanced arcs
       goodArcSize = 90;
       badArcSize = 90;
       goodColor = AppPalette.green;
       badColor = AppPalette.orange;
     } else {
-      // Poor air quality - larger red arc
       goodArcSize = 60;
       badArcSize = 120;
       goodColor = AppPalette.green;
@@ -806,6 +780,4 @@ class _AirQualityLabel extends StatelessWidget {
     );
   }
 }
-
-
 

@@ -26,7 +26,6 @@ class UserProfileWidget extends ConsumerWidget {
           ),
           child: Row(
             children: [
-              // User Avatar
               CircleAvatar(
                 radius: 24,
                 backgroundImage: user.photoURL != null 

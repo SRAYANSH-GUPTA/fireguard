@@ -15,8 +15,8 @@ class FireAlert {
   final DateTime detectedAt;
   final String description;
   final bool isNearby;
-  final String type; // 'satellite' or 'user_report'
-  final String? reporterEmail; // For user reports
+  final String type; 
+  final String? reporterEmail; 
 
   FireAlert({
     required this.id,
@@ -43,7 +43,7 @@ class FireAlert {
       longitude: hotspot.longitude,
       distanceKm: distance,
       severity: _getSeverityFromFrp(hotspot.frp),
-      detectedAt: DateTime.now(), // You could parse hotspot.acqDate if needed
+      detectedAt: DateTime.now(), 
       description: 'Fire detected via satellite',
       isNearby: isNearby,
       type: 'satellite',
@@ -57,7 +57,7 @@ class FireAlert {
       latitude: report.latitude,
       longitude: report.longitude,
       distanceKm: report.distanceKm,
-      severity: 'High', // User reports are considered high priority
+      severity: 'High', 
       detectedAt: report.createdAt,
       description: report.description,
       isNearby: report.isNearby,
@@ -67,7 +67,7 @@ class FireAlert {
   }
 
   static double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    return Geolocator.distanceBetween(lat1, lon1, lat2, lon2) / 1000; // Convert to km
+    return Geolocator.distanceBetween(lat1, lon1, lat2, lon2) / 1000; 
   }
 
   static String _getSeverityFromFrp(double frp) {
@@ -98,7 +98,6 @@ class FireAlertsService {
 
   static Future<List<FireAlert>> getFireAlerts({double? userLat, double? userLon}) async {
     try {
-      // Get user's alert radius
       final alertRadius = await UserService.getAlertRadius() ?? 16.0;
       
       // Get current user location if not provided
@@ -162,7 +161,6 @@ class FireAlertsService {
 
   static Future<List<FireAlert>> getAllFireAlerts({double? userLat, double? userLon}) async {
     try {
-      // Get user's alert radius
       final alertRadius = await UserService.getAlertRadius() ?? 16.0;
       
       // Get current user location if not provided
@@ -191,8 +189,8 @@ class FireAlertsService {
   }
 
   static Future<void> refreshAlerts() async {
-    _lastUpdate = null; // Force refresh on next request
-    await UserReportsService.refreshReports(); // Also refresh user reports
+    _lastUpdate = null; 
+    await UserReportsService.refreshReports(); 
   }
 
   static List<FireAlert> getCachedAlerts() {

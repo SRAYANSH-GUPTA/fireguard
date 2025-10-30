@@ -42,7 +42,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // App Logo/Title
               Icon(
                 Icons.local_fire_department,
                 size: 80,

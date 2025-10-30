@@ -48,7 +48,6 @@ class _MapViewState extends ConsumerState<MapView> {
     });
 
     try {
-      // Check if location services are enabled
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         print('Location services are disabled.');
@@ -168,7 +167,6 @@ class _MapViewState extends ConsumerState<MapView> {
         
         final stackLines = StackTrace.current.toString().split('\n');
         final interesting = stackLines.take(8).join('\n');
-        // ignore: avoid_print
         print('[MapView] Ignored setState after dispose. First occurrence. Stack snippet:\n$interesting');
       }
       return; 
@@ -189,19 +187,18 @@ class _MapViewState extends ConsumerState<MapView> {
       backgroundColor: AppPalette.screenBackground,
       body: Stack(
         children: [
-          // Flutter Map
           Positioned.fill(
             child: FlutterMap(
               mapController: mapController,
               options: MapOptions(
-                initialCenter: userLocation ?? const LatLng(20.0, 0.0), // Use user location or world view
+                initialCenter: userLocation ?? const LatLng(20.0, 0.0), 
                 initialZoom: userLocation != null ? 12.0 : 3.0,
                 minZoom: 2.0,
                 maxZoom: 18.0,
               ),
               children: [
                 TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  urlTemplate: 'https:
                   userAgentPackageName: 'com.example.fireguard',
                 ),
                 if (_evacuationRoute.isNotEmpty)
@@ -216,7 +213,6 @@ class _MapViewState extends ConsumerState<MapView> {
                   ),
                 MarkerLayer(
                   markers: [
-                    // User location marker
                     if (userLocation != null)
                       Marker(
                         point: userLocation!,
@@ -242,7 +238,6 @@ class _MapViewState extends ConsumerState<MapView> {
                           ),
                         ),
                       ),
-                    // Fire hotspot markers
                     ...fireHotspots.map((hotspot) => Marker(
                       point: LatLng(hotspot.latitude, hotspot.longitude),
                       width: _getMarkerSize(hotspot.frp),
@@ -299,62 +294,6 @@ class _MapViewState extends ConsumerState<MapView> {
           ),
           
           // Top search pill with fire count
-          // Positioned(
-          //   top: 16,
-          //   left: 80,
-          //   right: 16,
-          //   child: SafeArea(
-          //     bottom: false,
-          //     child: Column(
-          //       children: [
-          //         Container(
-          //           height: 40,
-          //           width: double.infinity,
-          //           constraints: const BoxConstraints(maxWidth: 320),
-          //           decoration: BoxDecoration(
-          //             color: Colors.white.withOpacity(0.25),
-          //             borderRadius: BorderRadius.circular(20),
-          //           ),
-          //           padding: const EdgeInsets.symmetric(horizontal: 16),
-          //           child: Row(
-          //             children: [
-          //               const Icon(Icons.search, color: Colors.white70, size: 20),
-          //               const SizedBox(width: 8),
-          //               Expanded(
-          //                 child: Text(
-          //                   showAllAnomalies ? 'All Thermal Anomalies' : 'Real Fires Only',
-          //                   style: const TextStyle(
-          //                     color: Colors.white,
-          //                     fontSize: 14,
-          //                     fontWeight: FontWeight.w600,
-          //                   ),
-          //                   overflow: TextOverflow.ellipsis,
-          //                 ),
-          //               ),
-          //               // if (fireHotspots.isNotEmpty)
-          //                 // Container(
-          //                 //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          //                 //   decoration: BoxDecoration(
-          //                 //     color: AppPalette.orange,
-          //                 //     borderRadius: BorderRadius.circular(12),
-          //                 //   ),
-          //                 //   child: Text(
-          //                 //     '${fireHotspots.length}',
-          //                 //     style: const TextStyle(
-          //                 //       color: Colors.white,
-          //                 //       fontSize: 12,
-          //                 //       fontWeight: FontWeight.bold,
-          //                 //     ),
-          //                 //   ),
-          //                 // ),
-          //             ],
-          //           ),
-          //         ),
-          //         const SizedBox(height: 8),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           
           // Refresh button
           Positioned(
@@ -416,12 +355,6 @@ class _MapViewState extends ConsumerState<MapView> {
                 ),
               ),
             ),
-          
-     
-      
-      
-          
-        
           if (isLoading || isLocationLoading)
             Positioned.fill(
               child: Container(
@@ -451,10 +384,6 @@ class _MapViewState extends ConsumerState<MapView> {
     );
   }
 
-  
-
-
-
   double _getMarkerSize(double frp) {
     if (frp > 50.0) return 32.0;
     if (frp > 20.0) return 26.0;
@@ -470,7 +399,6 @@ class _MapViewState extends ConsumerState<MapView> {
   }
 
   void _showFireDetails(FireHotspot hotspot) async {
-    // Calculate distance from user location
     double? distanceFromUser;
     if (userLocation != null) {
       distanceFromUser = _calculateDistance(
@@ -575,7 +503,7 @@ class _MapViewState extends ConsumerState<MapView> {
 
   // Calculate distance between two points using Haversine formula
   double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    const double earthRadius = 6371; // Earth's radius in kilometers
+    const double earthRadius = 6371; 
     
     double dLat = _degreesToRadians(lat2 - lat1);
     double dLon = _degreesToRadians(lon2 - lon1);
@@ -638,11 +566,10 @@ class _MapViewState extends ConsumerState<MapView> {
     
     // Distance scoring (closer = higher risk)
     if (distanceFromUser != null) {
-      // Convert km to miles for risk assessment
       final distanceMiles = distanceFromUser * 0.621371;
-      if (distanceMiles < 3.1) riskScore += 3; // < 5 km
-      else if (distanceMiles < 9.3) riskScore += 2; // < 15 km
-      else if (distanceMiles < 18.6) riskScore += 1; // < 30 km
+      if (distanceMiles < 3.1) riskScore += 3; 
+      else if (distanceMiles < 9.3) riskScore += 2; 
+      else if (distanceMiles < 18.6) riskScore += 1; 
     }
     
     // Determine risk level
@@ -699,11 +626,8 @@ class _MapViewState extends ConsumerState<MapView> {
     if (frp > 10.0) return 'Medium Fire (Low Danger)';
     return 'Small Fire (Minimal Danger)';
   }
-
-
   String _formatDate(String dateStr) {
     try {
-      // Assuming date format is YYYY-MM-DD
       final parts = dateStr.split('-');
       if (parts.length == 3) {
         final year = parts[0];
@@ -716,8 +640,6 @@ class _MapViewState extends ConsumerState<MapView> {
       return dateStr;
     }
   }
-
-
   String _getUserFriendlyRiskLevel(String riskLevel) {
     switch (riskLevel) {
       case '🔴 Critical':

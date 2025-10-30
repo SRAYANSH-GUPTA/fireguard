@@ -45,5 +45,3 @@ class AppShell extends ConsumerWidget {
     );
   }
 }
-
-

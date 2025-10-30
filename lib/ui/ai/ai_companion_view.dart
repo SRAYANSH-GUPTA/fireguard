@@ -37,14 +37,12 @@ class AiViewModel extends StateNotifier<List<AiMessage>> {
     state = [...state, AiMessage(role: MessageRole.assistant, text: 'Thinking about your fire safety question...')];
     
     try {
-      // Get response from Gemini
       final response = await GeminiService.generateResponse(text);
       
       // Remove loading message and add actual response
       state = state.take(state.length - 1).toList();
       state = [...state, AiMessage(role: MessageRole.assistant, text: response)];
     } catch (e) {
-      // Remove loading message and add error response
       state = state.take(state.length - 1).toList();
       state = [...state, AiMessage(
         role: MessageRole.assistant, 
@@ -102,7 +100,6 @@ class _AiCompanionViewState extends ConsumerState<AiCompanionView> {
       backgroundColor: AppPalette.screenBackground,
       body: Column(
         children: [
-          // AI Disclaimer Banner
           if (!_disclaimerDismissed)
             Container(
               width: double.infinity,
@@ -359,5 +356,3 @@ class _AiCompanionViewState extends ConsumerState<AiCompanionView> {
     );
   }
 }
-
-

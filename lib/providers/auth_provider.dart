@@ -6,7 +6,6 @@ import '../services/auth_service.dart';
 
 /// One-time initialization: Firebase + GoogleSignIn (new API requires explicit initialize).
 final authInitProvider = FutureProvider<void>((ref) async {
-  // Ensure Firebase is ready (idempotent if already initialized elsewhere).
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -17,7 +16,6 @@ final authInitProvider = FutureProvider<void>((ref) async {
 
 // Provider for AuthService instance
 final authServiceProvider = Provider<AuthService>((ref) {
-  // Ensure initialization has run before exposing service (consumer widgets can await authInitProvider if needed)
   ref.watch(authInitProvider);
   return AuthService();
 });
@@ -32,7 +30,6 @@ final currentUserProvider = StreamProvider<User?>((ref) {
 class GoogleSignInController extends AsyncNotifier<UserCredential?> {
   @override
   Future<UserCredential?> build() async {
-    // Not performing an action on build; initial state is AsyncData(null)
     return null;
   }
 

@@ -42,7 +42,7 @@ class FireHotspot {
       acqDate: fields[5],
       acqTime: fields[6],
       satellite: fields[7],
-      confidence: _normalizeConfidence(fields[8]), // map short/varied codes
+      confidence: _normalizeConfidence(fields[8]), 
       version: fields[9],
       brightT31: double.tryParse(fields[10]) ?? 0.0,
       frp: double.tryParse(fields[11]) ?? 0.0,
@@ -56,7 +56,7 @@ class FireHotspot {
     return FireHotspot(
       latitude: double.parse(fields[0]),
       longitude: double.parse(fields[1]),
-      brightness: 0.0, // not provided in LANDSAT csv
+      brightness: 0.0, 
       scan: double.tryParse(fields[4]) ?? 0.0,
       track: double.tryParse(fields[5]) ?? 0.0,
       acqDate: fields[6],
@@ -72,18 +72,15 @@ class FireHotspot {
 
   static String _normalizeConfidence(String raw) {
     final v = raw.trim().toLowerCase();
-    // Map short codes to words
     if (v == 'h') return 'high';
     if (v == 'n') return 'nominal';
     if (v == 'l') return 'low';
-    // Already in word form or numeric
     if (v == 'high' || v == 'nominal' || v == 'low') return v;
     return v;
   }
 
   // Check if this is likely a real fire
   bool get isRealFire {
-    // High confidence fires are always considered real
     if (confidence == 'high') return true;
     
     // Nominal confidence fires with significant FRP (intense fire)
@@ -129,8 +126,6 @@ class FireHotspot {
     if (confidence == 'high') return 'Fire';
     return 'Thermal Anomaly';
   }
-
-
   String _getTimeOfDay() {
     try {
       final intValue = int.parse(acqTime);
@@ -149,7 +144,6 @@ class FireHotspot {
         return 'Night';
       }
     } catch (e) {
-      // Fallback
     }
     return dayNight == 'D' ? 'Day' : 'Night';
   }

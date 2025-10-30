@@ -11,8 +11,6 @@ import 'package:fireguard/models/report_model.dart';
 import 'package:fireguard/services/report_service.dart';
 import 'package:fireguard/providers/auth_provider.dart';
 
-
-
 class ReportViewModel extends StateNotifier<ReportState> {
   ReportViewModel() : super(const ReportState());
   
@@ -31,8 +29,6 @@ class ReportViewModel extends StateNotifier<ReportState> {
       if (!serviceEnabled) {
         throw Exception('Location services are disabled.');
       }
-
-  
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -44,8 +40,6 @@ class ReportViewModel extends StateNotifier<ReportState> {
       if (permission == LocationPermission.deniedForever) {
         throw Exception('Location permissions are permanently denied');
       }
-
-  
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
@@ -228,7 +222,6 @@ class ReportView extends ConsumerWidget {
       backgroundColor: AppPalette.screenBackground,
       body: Stack(
         children: [
-          // Flutter Map
           Positioned.fill(
             child: FlutterMap(
               mapController: mapController,
@@ -251,10 +244,9 @@ class ReportView extends ConsumerWidget {
               ),
               children: [
                 TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  urlTemplate: 'https:
                   userAgentPackageName: 'com.example.fireguard',
                 ),
-                // Current location marker
                 if (s.currentLocation != null)
                   MarkerLayer(
                     markers: [
@@ -270,7 +262,6 @@ class ReportView extends ConsumerWidget {
                       ),
                     ],
                   ),
-                // Selected location marker
                 if (s.selectedLocation != null)
                   MarkerLayer(
                     markers: [
@@ -343,7 +334,6 @@ class ReportView extends ConsumerWidget {
               ],
             ),
           ),
-          // Bottom panel
           Positioned(
             left: 0,
             right: 0,
@@ -430,5 +420,3 @@ class _RoundControl extends StatelessWidget {
     );
   }
 }
-
-

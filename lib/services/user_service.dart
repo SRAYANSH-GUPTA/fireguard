@@ -33,7 +33,6 @@ class UserService {
 
   static Future<String?> requestNotificationPermissionAndToken() async {
     try {
-      // Use the centralized notification service
       return await NotificationService().getFCMToken();
     } catch (e) {
       dev.log('[UserService] requestNotificationPermissionAndToken error: $e');
@@ -125,5 +124,3 @@ class UserService {
     }
   }
 }
-
-

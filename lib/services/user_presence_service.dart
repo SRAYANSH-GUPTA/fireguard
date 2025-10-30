@@ -33,5 +33,3 @@ class UserPresenceService {
     }, SetOptions(merge: true));
   }
 }
-
-

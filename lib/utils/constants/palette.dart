@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AppPalette {
-  // Primary Colors
-  // Dark Gray / Near Black range (#121212 – #1C1C1E)
   static const Color backgroundDark = Color(0xFF121212);
   static const Color backgroundDarker = Color(0xFF1C1C1E);
 
@@ -15,7 +13,6 @@ class AppPalette {
   static const Color green = Color(0xFF34C759);
 
   // Secondary / Accent Colors
-  // Light Gray (#A0A0A0 – #C7C7CC)
   static const Color lightGray = Color(0xFFA0A0A0);
   static const Color lightGrayLight = Color(0xFFC7C7CC);
 

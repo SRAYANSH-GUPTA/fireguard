@@ -10,10 +10,10 @@ class EvacuationRoutingService {
   EvacuationRoutingService._();
 
   static double _distanceKm(double lat1, double lon1, double lat2, double lon2) {
-    const double p = 0.017453292519943295; // pi/180
+    const double p = 0.017453292519943295; 
     final double a = 0.5 - cos((lat2 - lat1) * p) / 2 +
         cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
-    return 12742 * asin(sqrt(a)); // 2 * R; R = 6371 km
+    return 12742 * asin(sqrt(a)); 
   }
 
   static FireHotspot? _nearestHotspot(LatLng user, List<FireHotspot> hotspots) {
@@ -31,7 +31,6 @@ class EvacuationRoutingService {
   }
 
   // Compute a simple safe target by moving away from the nearest hotspot by a given distance.
-  // This is a heuristic; for proper safety zones, integrate official shelter POIs.
   static LatLng computeSafeTarget({
     required LatLng user,
     required List<FireHotspot> hotspots,
@@ -39,14 +38,12 @@ class EvacuationRoutingService {
   }) {
     final FireHotspot? nearest = _nearestHotspot(user, hotspots);
     if (nearest == null) {
-      // Fallback: move slightly north if no hotspots
       return LatLng(user.latitude + (moveAwayKm / 111.0), user.longitude);
     }
 
     // Vector from hotspot to user
     final double dLat = user.latitude - nearest.latitude;
     final double dLon = user.longitude - nearest.longitude;
-    // If vector too small (same spot), push east
     final double norm = (dLat.abs() + dLon.abs()) < 1e-9 ? 1.0 : sqrt(dLat * dLat + dLon * dLon);
     final double vLat = dLat / norm;
     final double vLon = dLon / norm;
@@ -66,7 +63,7 @@ class EvacuationRoutingService {
     required LatLng start,
     required LatLng end,
   }) async {
-    final String url = 'https://router.project-osrm.org/route/v1/foot/'
+    final String url = 'https:
         '${start.longitude},${start.latitude};${end.longitude},${end.latitude}'
         '?overview=full&geometries=geojson';
 
@@ -92,19 +89,3 @@ class EvacuationRoutingService {
     return points;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

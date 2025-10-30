@@ -58,7 +58,7 @@ class UserReport {
   }
 
   static double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    return Geolocator.distanceBetween(lat1, lon1, lat2, lon2) / 1000; // Convert to km
+    return Geolocator.distanceBetween(lat1, lon1, lat2, lon2) / 1000; 
   }
 
   String get timeAgo {
@@ -75,7 +75,6 @@ class UserReport {
   }
 
   String get reporterName {
-    // Extract name from email (everything before @)
     final emailParts = reportedByEmail.split('@');
     if (emailParts.isNotEmpty) {
       return emailParts[0];
@@ -87,11 +86,10 @@ class UserReport {
 class UserReportsService {
   static List<UserReport> _currentReports = [];
   static DateTime? _lastUpdate;
-  static const Duration _updateInterval = Duration(minutes: 5); // More frequent updates for user reports
+  static const Duration _updateInterval = Duration(minutes: 5); 
 
   static Future<List<UserReport>> getUserReports({double? userLat, double? userLon}) async {
     try {
-      // Get user's alert radius
       final alertRadius = await _getAlertRadius();
       
       // Get current user location if not provided
@@ -134,7 +132,7 @@ class UserReportsService {
       final QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('reports')
           .orderBy('createdAt', descending: true)
-          .limit(100) // Limit to recent reports
+          .limit(100) 
           .get();
       
       log('[UserReportsService] Fetched ${snapshot.docs.length} user reports');
@@ -155,7 +153,6 @@ class UserReportsService {
 
   static Future<List<UserReport>> getAllUserReports({double? userLat, double? userLon}) async {
     try {
-      // Get user's alert radius
       final alertRadius = await _getAlertRadius();
       
       // Get current user location if not provided
@@ -184,7 +181,7 @@ class UserReportsService {
   }
 
   static Future<void> refreshReports() async {
-    _lastUpdate = null; // Force refresh on next request
+    _lastUpdate = null; 
   }
 
   static List<UserReport> getCachedReports() {
@@ -196,7 +193,7 @@ class UserReportsService {
       return await UserService.getAlertRadius() ?? 16.0;
     } catch (e) {
       log('[UserReportsService] Error getting alert radius: $e');
-      return 16.0; // Default 16km radius
+      return 16.0; 
     }
   }
 

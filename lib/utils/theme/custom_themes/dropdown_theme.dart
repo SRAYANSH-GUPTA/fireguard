@@ -12,8 +12,6 @@ class TDropdownTheme {
               backgroundColor: WidgetStateProperty.all(Colors.white),
             ),
             inputDecorationTheme: InputDecorationTheme(
-                     
-                     
                       enabledBorder: OutlineInputBorder(
                       
                         borderSide: BorderSide(color: AppPalette.border),

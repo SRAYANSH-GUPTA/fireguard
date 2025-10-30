@@ -14,7 +14,6 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
   Future<void> initialize() async {
-    // Initialize local notifications
     await _initializeLocalNotifications();
     
     // Request notification permissions
@@ -51,7 +50,6 @@ class NotificationService {
       'Fire Alerts',
       description: 'Notifications for fire reports and safety alerts',
       importance: Importance.high,
-      // priority: Priority.high,
       enableVibration: true,
       playSound: true,
     );
@@ -76,7 +74,6 @@ class NotificationService {
   }
 
   Future<void> _setupMessageHandlers() async {
-    // Handle messages when app is in foreground
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
     
     // Handle messages when app is opened from background
@@ -134,7 +131,6 @@ class NotificationService {
 
   void _onNotificationTapped(NotificationResponse response) {
     dev.log('[NotificationService] Notification tapped: ${response.payload}');
-    // Handle notification tap - could navigate to specific screen
   }
 
   void _handleNotificationNavigation(Map<String, dynamic> data) {
@@ -146,8 +142,6 @@ class NotificationService {
     dev.log('[NotificationService] Navigation data - Type: $type, ReportId: $reportId, Lat: $latitude, Lng: $longitude');
 
     // TODO: Implement navigation to appropriate screen based on notification data
-    // This could navigate to the map view with the fire report location
-    // or show a detailed alert screen
   }
 
   Future<String?> getFCMToken() async {

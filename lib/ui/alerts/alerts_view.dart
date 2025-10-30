@@ -11,7 +11,7 @@ class AlertItem {
   final double kilometersAway;
   final String severity;
   final String id;
-  final String type; // 'satellite' or 'user_report'
+  final String type; 
   final String? reporterEmail;
 
   const AlertItem({
@@ -69,7 +69,7 @@ class AlertsViewModel extends StateNotifier<AlertsState> {
       : super(
           const AlertsState(
             alerts: <AlertItem>[],
-            radiusMiles: 10, // Default 10 miles
+            radiusMiles: 10, 
             isLoading: false,
           ),
         ) {
@@ -81,12 +81,10 @@ class AlertsViewModel extends StateNotifier<AlertsState> {
     try {
       final double? savedRadiusKm = await UserService.getAlertRadius();
       if (savedRadiusKm != null) {
-        // Convert saved kilometers to miles
         final double radiusMiles = savedRadiusKm * 0.621371;
         state = state.copyWith(radiusMiles: radiusMiles);
       }
     } catch (e) {
-      // If loading fails, keep the default value
       debugPrint('Failed to load saved alert radius: $e');
     }
   }
@@ -94,14 +92,11 @@ class AlertsViewModel extends StateNotifier<AlertsState> {
   Future<void> updateRadius(double miles) async {
     state = state.copyWith(radiusMiles: miles);
     try {
-      // Convert miles to kilometers for storage
       final double radiusKm = miles * 1.60934;
       await UserService.updateAlertRadius(radiusKm);
-      // Reload alerts with new radius
       _loadFireAlerts();
     } catch (e) {
       debugPrint('Failed to save alert radius: $e');
-      // Optionally show a snackbar or handle the error
     }
   }
 
@@ -454,7 +449,7 @@ class _RadiusCardState extends State<_RadiusCard> {
             ),
             child: Slider(
               min: 1,
-              max: 50, // 50 miles max (roughly 80 km)
+              max: 50, 
               value: _tempValue.clamp(1, 50),
               onChanged: _onSliderChanged,
             ),
@@ -488,5 +483,3 @@ class _RadiusCardState extends State<_RadiusCard> {
     );
   }
 }
-
-
